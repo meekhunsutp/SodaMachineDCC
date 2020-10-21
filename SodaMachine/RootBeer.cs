@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SodaMachine
+﻿namespace SodaMachine
 {
     class RootBeer : Can
     {
+        public RootBeer()
+        {
+            name = "rootBeer";
+            cost = 0.60;
+        }
     }
 }

@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SodaMachine
+﻿namespace SodaMachine
 {
     abstract class Can
     {
         protected double cost;
-        public double Cost;
+        public double Cost
+        {
+            get
+            {
+                return cost;
+            }
+        }
         public string name;
-
     }
 }
