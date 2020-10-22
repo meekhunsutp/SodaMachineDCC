@@ -225,8 +225,18 @@ namespace SodaMachine
             {
                 DispenseChange(moneyInserted);
             }
-
         }
+        public void SortCoins(List<Coin> coins)
+        {
+            foreach (Coin coin in coins)
+            {
+                if( coin.name == "quarter")
+                {
+
+                }
+            }
+        }
+
         public double CountCoins(List<Coin> coins)
         {
             double sum = 0;
