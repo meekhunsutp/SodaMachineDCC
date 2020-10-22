@@ -16,8 +16,8 @@ namespace SodaMachine
             inventory = new List<Can>();
             changeBin = new List<Coin>();
             drinkBin = new List<Can>();
+            PopulateSodaMachine();
         }
-
         public void CreateCoinsInRegister(double quantity, string nameOfCoin)
         {
             Coin coin;
@@ -83,7 +83,6 @@ namespace SodaMachine
             double costOfBeverage = CostOfBeverage(beverage);
             bool checkCanInventory = CheckCanInventory(beverage);
             double moneyInRegister = MoneyInRegister();
-
             if (checkCanInventory == true)
             {
                 // not enough money passed in, no trans, return money
@@ -102,6 +101,7 @@ namespace SodaMachine
 
                 // too much money, accept payment, return change as list of coins from
                 // internal, limited register, dispense soda instance to be saved in backpack
+                // too much money, not enough change, return coins
                 else if (moneyInserted > costOfBeverage)
                 {
                     double change = moneyInserted - costOfBeverage;
@@ -117,7 +117,7 @@ namespace SodaMachine
                     }
                 }
             }
-            else // no inventory
+            else // enough money but no inventory
             {
                 CoinReturn(coins);
             }
