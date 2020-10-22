@@ -1,8 +1,8 @@
 ﻿namespace SodaMachine
 {
-    class OrangeSoda : Can
+    class Orange : Can
     {
-        public OrangeSoda()
+        public Orange()
         {
             name = "orangeSoda";
             cost = 0.06;
