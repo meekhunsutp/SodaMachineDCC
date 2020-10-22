@@ -10,16 +10,18 @@ namespace SodaMachine
             //sodaMachine.PopulateSodaMachine();
             //sodaMachine.DispenseChange(1.32);
 
-            List<Coin> coins = new List<Coin>();
-            for(int i = 0; i < 5; i++)
-            {
-                coins.Add(new Quarter());
-            }
+            //List<Coin> coins = new List<Coin>();
+            //for(int i = 0; i < 5; i++)
+            //{
+            //    coins.Add(new Quarter());
+            //}
 
-            List<Coin> register = new List<Coin>();
-            register.Add(new Penny());
+            //List<Coin> register = new List<Coin>();
+            //register.Add(new Penny());
 
-            register.AddRange(coins);
+            //register.AddRange(coins);
+
+            UserInterface.SelectCoin();
         }
     }
 }

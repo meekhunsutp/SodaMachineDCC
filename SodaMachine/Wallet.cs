@@ -10,6 +10,7 @@ namespace SodaMachine
         public Wallet()
         {
             coins = new List<Coin>();
+            card = new Card();
             PopulateWallet();
         }
 
