@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SodaMachine
 {
@@ -17,7 +18,7 @@ namespace SodaMachine
             drinkBin = new List<Can>();
         }
 
-        public void AddCoinsToRegister(double quantity, string nameOfCoin)
+        public void CreateCoinsInRegister(double quantity, string nameOfCoin)
         {
             Coin coin;
             for (int i = 0; i < quantity; i++)
@@ -44,18 +45,226 @@ namespace SodaMachine
                 }
             }
         }
-        public Coin RemoveCoinsFromRegister(string nameOfCoin)
+        public void CreateCansInMachine(double quantity, string nameOfCan)
+        {
+            Can can;
+            for (int i = 0; i < quantity; i++)
+            {
+                if (nameOfCan == "orange")
+                {
+                    can = new Orange();
+                    inventory.Add(can);
+                }
+                else if (nameOfCan == "cola")
+                {
+                    can = new Cola();
+                    inventory.Add(can);
+                }
+                else
+                {
+                    can = new RootBeer();
+                    inventory.Add(can);
+                }
+            }
+        }
+        public void PopulateSodaMachine()
+        {
+            CreateCoinsInRegister(20, "quarter");//20
+            CreateCoinsInRegister(10, "dime");//10
+            CreateCoinsInRegister(20, "nickel");//20
+            CreateCoinsInRegister(50, "penny");//50
+            CreateCansInMachine(10, "orange");
+            CreateCansInMachine(10, "cola");
+            CreateCansInMachine(10, "rootbeer");
+        }
+        public void PurchaseASoda(List<Coin> coins, string beverage)
+        {
+            double moneyInserted = CountCoins(coins);
+            double costOfBeverage = CostOfBeverage(beverage);
+            bool checkCanInventory = CheckCanInventory(beverage);
+            double moneyInRegister = MoneyInRegister();
+
+            if (checkCanInventory == true)
+            {
+                // not enough money passed in, no trans, return money
+                if (moneyInserted < costOfBeverage)
+                {
+                    CoinReturn(coins);
+                }
+
+                // exact change passes in, accept payment,
+                //dispense soda instance to be saved in backpack
+                else if (moneyInserted == costOfBeverage)
+                {
+                    AddCoinsInsertedToRegister(coins);
+                    DispenseCan(1, beverage);
+                }
+
+                // too much money, accept payment, return change as list of coins from
+                // internal, limited register, dispense soda instance to be saved in backpack
+                else if (moneyInserted > costOfBeverage)
+                {
+                    double change = moneyInserted - costOfBeverage;
+                    if (change < moneyInRegister)
+                    {
+                        AddCoinsInsertedToRegister(coins);
+                        DispenseChange(change);
+                        DispenseCan(1, beverage);
+                    }
+                    else// not enough change
+                    {
+                        CoinReturn(coins);
+                    }
+                }
+            }
+            else // no inventory
+            {
+                CoinReturn(coins);
+            }
+        }
+        public double CountCoins(List<Coin> coins)
+        {
+            double sum = 0;
+            foreach (Coin coin in coins)
+            {
+                sum += coin.Value;
+            }
+            return sum;
+        } // static method in UI?
+
+        public double CostOfBeverage(string beverage)
+        {
+            Can can;
+            if (beverage == "cola")
+            {
+                can = new Cola();
+                return can.Cost;
+            }
+            else if (beverage == "orange")
+            {
+                can = new Orange();
+                return can.Cost;
+            }
+            else
+            {
+                can = new RootBeer();
+                return can.Cost;
+            }
+        }
+        public void AddCoinsInsertedToRegister(List<Coin> coins)
+        {
+            register.AddRange(coins);
+        }
+        public double MoneyInRegister()
+        {
+            double sum = 0;
+            foreach (Coin coin in register)
+            {
+                sum += coin.Value;
+            }
+            return sum;
+        }
+        public bool CheckCanInventory(string beverage)
+        {
+            foreach (Can can in inventory)
+            {
+                if (can.name == beverage)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        public void DispenseCan(double quantity, string beverage)
+        {
+            foreach (Can can in inventory)
+            {
+                for (int i = 0; i < quantity; i++)
+                {
+                    if (beverage == can.name)
+                    {
+                        inventory.Remove(can);
+                        drinkBin.Add(can);
+                    }
+                }
+            }
+        }
+
+        public bool CheckRegisterCoinInventory(string nameOfCoin)
+        {
+            foreach (Coin coin in register)
+            {
+                if (coin.name == nameOfCoin)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        public double DispenseChange(double change)
+        {
+            double changeCalc = change;
+            while (change > .01)
+            {
+                if (change >= 0.25 && CheckRegisterCoinInventory("quarter"))
+                {
+                    var quantity = Math.Round(changeCalc / .25);
+                    for (int i = 0; i < quantity; i++)
+                    {
+                        CoinsFromRegisterToChangeBin("quarter");
+                    }
+                    change -= quantity * .25;
+                    return DispenseChange(change);
+                }
+                else if (change >= 0.1 && CheckRegisterCoinInventory("dime"))
+                {
+                    var quantity = Math.Round(changeCalc / .1);
+                    for (int i = 0; i < quantity; i++)
+                    {
+                        CoinsFromRegisterToChangeBin("dime");
+                    }
+                    change -= quantity * .1;
+                    return DispenseChange(change);
+                }
+                else if (change >= 0.05 && CheckRegisterCoinInventory("nickel"))
+                {
+                    var quantity = Math.Round(changeCalc / .05);
+                    for (int i = 0; i < quantity; i++)
+                    {
+                        CoinsFromRegisterToChangeBin("nickel");
+                    }
+                    change -= quantity * .05;
+                    return DispenseChange(change);
+                }
+                else
+                {
+                    var quantity = Math.Round(changeCalc / .01);
+                    for (int i = 0; i < quantity; i++)
+                    {
+                        CoinsFromRegisterToChangeBin("penny");
+                    }
+                }
+            }
+            return change;
+        }
+
+        public Coin CoinsFromRegisterToChangeBin(string nameOfCoin)
         {
             foreach (Coin coin in register)
             {
                 if (nameOfCoin == coin.name)
                 {
                     register.Remove(coin);
-                    return coin;
+                    changeBin.Add(coin);
                 }
             }
             return null;
         }
+        public void CoinReturn(List<Coin> coins)
+        {
+            changeBin.AddRange(coins);
+        }
+
         //public void RemoveCoinsFromRegister(double quantity, string nameOfCoin)
         //{
         //    for (int i = 0; i < quantity; i++)
@@ -84,285 +293,66 @@ namespace SodaMachine
         //        }
         //    } while (iterations <= quantity);
         //}
-        public void AddCoinsToChangeBin(double quantity, string nameOfCoin)
-        {
-            Coin coin;
-            for (int i = 0; i < quantity; i++)
-            {
-                if (nameOfCoin == "penny")
-                {
-                    coin = new Penny();
-                    changeBin.Add(coin);
-                }
-                else if (nameOfCoin == "nickel")
-                {
-                    coin = new Nickel();
-                    changeBin.Add(coin);
-                }
-                else if (nameOfCoin == "dime")
-                {
-                    coin = new Dime();
-                    changeBin.Add(coin);
-                }
-                else
-                {
-                    coin = new Quarter();
-                    changeBin.Add(coin);
-                }
-            }
-        }
-        public void AddCansToMachine(double quantity, string nameOfCan)
-        {
-            Can can;
-            for (int i = 0; i < quantity; i++)
-            {
-                if (nameOfCan == "orange")
-                {
-                    can = new Orange();
-                    inventory.Add(can);
-                }
-                else if (nameOfCan == "cola")
-                {
-                    can = new Cola();
-                    inventory.Add(can);
-                }
-                else
-                {
-                    can = new RootBeer();
-                    inventory.Add(can);
-                }
-            }
-        }
-        public void RemoveCansFromInventory(double quantity, string nameOfCan)
-        {
-            foreach (Can can in inventory)
-            {
-                for (int i = 0; i < quantity; i++)
-                {
-                    if (nameOfCan == can.name)
-                    {
-                        inventory.Remove(can);
-                    }
-                }
-            }
-        }
-        public void AddCansToDrinkBin(int quantity, string nameOfCan)
-        {
-            Can can;
-            for (int i = 0; i < quantity; i++)
-            {
-                if (nameOfCan == "orange")
-                {
-                    can = new Orange();
-                    drinkBin.Add(can);
-                }
-                else if (nameOfCan == "cola")
-                {
-                    can = new Cola();
-                    drinkBin.Add(can);
-                }
-                else
-                {
-                    can = new RootBeer();
-                    drinkBin.Add(can);
-                }
-            }
-        }
-        public void PopulateSodaMachine()
-        {
-            AddCoinsToRegister(20, "quarter");//20
-            AddCoinsToRegister(10, "dime");//10
-            AddCoinsToRegister(20, "nickel");//20
-            AddCoinsToRegister(50, "penny");//50
-            AddCansToMachine(10, "orange");
-            AddCansToMachine(10, "cola");
-            AddCansToMachine(10, "rootbeer");
-        }
-
-        public void PurchaseASoda(List<Coin> coins, string beverage)
-        {
-            double moneyInserted = CountCoins(coins);
-            double costOfBeverage = CostOfBeverage(beverage);
-            bool checkInventory = CheckInventory(beverage);
-            double moneyInRegister = MoneyInRegister();
-
-            if (checkInventory == true)
-            {
-                // not enough money passed in, no trans, return money
-                if (moneyInserted < costOfBeverage)
-                {
-                    DispenseChange(moneyInserted);
-                }
-
-                // exact change passes in, accept payment,
-                //dispense soda instance to be saved in backpack
-                else if (moneyInserted == costOfBeverage)
-                {
-                    //AddCoinsToRegister();
-                    RemoveCansFromInventory(1, beverage);
-                    AddCansToDrinkBin(1, beverage);
-                }
-
-                // too much money, accept payment, return change as list of coins from
-                // internal, limited register, dispense soda instance to be saved in backpack
-                else if (moneyInserted > costOfBeverage)
-                {
-                    double change = moneyInserted - costOfBeverage;
-                    if(change > moneyInRegister)
-                    {
-                        DispenseChange(change);
-                        //AddCoinsToRegister();
-                        RemoveCansFromInventory(1, beverage);
-                        AddCansToDrinkBin(1, beverage);
-                    }
-                    else
-                    {
-                        DispenseChange(moneyInserted);
-                    }
-                }
-            }
-            else // no inventory
-            {
-                DispenseChange(moneyInserted);
-            }
-        }
-        public void SortCoins(List<Coin> coins)
-        {
-            foreach (Coin coin in coins)
-            {
-                if( coin.name == "quarter")
-                {
-
-                }
-            }
-        }
-
-        public double CountCoins(List<Coin> coins)
-        {
-            double sum = 0;
-            foreach (Coin coin in coins)
-            {
-                sum += coin.Value;
-            }
-            return sum;
-        } // static method in UI?
-        public double CostOfBeverage(string beverage)
-        {
-            Can can;
-            if (beverage == "cola")
-            {
-                can = new Cola();
-                return can.Cost;
-            }
-            else if (beverage == "orange")
-            {
-                can = new Orange();
-                return can.Cost;
-            }
-            else
-            {
-                can = new RootBeer();
-                return can.Cost;
-            }
-        }
-
-
-        public double MoneyInRegister()
-        {
-            double sum = 0;
-            foreach (Coin coin in register)
-            {
-                sum += coin.Value;
-            }
-            return sum;
-        }
-
-        public double DispenseChange(double change)
-        {
-            double changeCalc = change;
-            while (change > .01)
-            {
-                if (change >= 0.25 && RegisterCoinCheck("quarter"))
-                {
-                    var quantity = Math.Round(changeCalc / .25);
-                    for (int i = 0; i < quantity; i++)
-                    {
-                        RemoveCoinsFromRegister("quarter");
-                    }
-                    AddCoinsToChangeBin(quantity, "quarter");
-                    change -= quantity * .25;
-                    return DispenseChange(change);
-                }
-                else if (change >= 0.1 && RegisterCoinCheck("dime"))
-                {
-                    var quantity = Math.Round(changeCalc / .1);
-                    for (int i = 0; i < quantity; i++)
-                    {
-                        RemoveCoinsFromRegister("dime");
-                    }
-                    AddCoinsToChangeBin(quantity, "dime");
-                    change -= quantity * .1;
-                    return DispenseChange(change);
-                }
-                else if (change >= 0.05 && RegisterCoinCheck("nickel"))
-                {
-                    var quantity = Math.Round(changeCalc / .05);
-                    for (int i = 0; i < quantity; i++)
-                    {
-                        RemoveCoinsFromRegister("nickel");
-                    }
-                    AddCoinsToChangeBin(quantity, "nickel");
-                    change -= quantity * .05;
-                    return DispenseChange(change);
-                }
-                else
-                {
-                    var quantity = Math.Round(changeCalc / .01);
-                    for (int i = 0; i < quantity; i++)
-                    {
-                        RemoveCoinsFromRegister("penny");
-                    }
-                    AddCoinsToChangeBin(quantity, "penny");
-                }
-            }
-            return change;
-        }
-
-        public bool RegisterCoinCheck(string nameOfCoin)
-        {
-            foreach(Coin coin in register)
-            {
-                if(coin.name == nameOfCoin)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-        public Can DispenseSoda(string beverage)
-        {
-            foreach (Can can in inventory)
-            {
-                if (can.name == beverage)
-                {
-                    inventory.Remove(can);
-                    return can;
-                }
-            }
-            return null;
-        }
-        public bool CheckInventory(string beverage)
-        {
-            foreach (Can can in inventory)
-            {
-                if (can.name == beverage)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-
+        //public void AddCoinsToChangeBin(double quantity, string nameOfCoin)
+        //{
+        //    Coin coin;
+        //    for (int i = 0; i < quantity; i++)
+        //    {
+        //        if (nameOfCoin == "penny")
+        //        {
+        //            coin = new Penny();
+        //            changeBin.Add(coin);
+        //        }
+        //        else if (nameOfCoin == "nickel")
+        //        {
+        //            coin = new Nickel();
+        //            changeBin.Add(coin);
+        //        }
+        //        else if (nameOfCoin == "dime")
+        //        {
+        //            coin = new Dime();
+        //            changeBin.Add(coin);
+        //        }
+        //        else
+        //        {
+        //            coin = new Quarter();
+        //            changeBin.Add(coin);
+        //        }
+        //    }
+        //}
+        //public void AddCansToDrinkBin(int quantity, string nameOfCan)
+        //{
+        //    Can can;
+        //    for (int i = 0; i < quantity; i++)
+        //    {
+        //        if (nameOfCan == "orange")
+        //        {
+        //            can = new Orange();
+        //            drinkBin.Add(can);
+        //        }
+        //        else if (nameOfCan == "cola")
+        //        {
+        //            can = new Cola();
+        //            drinkBin.Add(can);
+        //        }
+        //        else
+        //        {
+        //            can = new RootBeer();
+        //            drinkBin.Add(can);
+        //        }
+        //    }
+        //}
+        //public Can DispenseSoda(string beverage)
+        //{
+        //    foreach (Can can in inventory)
+        //    {
+        //        if (can.name == beverage)
+        //        {
+        //            inventory.Remove(can);
+        //            return can;
+        //        }
+        //    }
+        //    return null;
+        //}
     }
 }
