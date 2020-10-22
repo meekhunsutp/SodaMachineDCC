@@ -179,50 +179,54 @@ namespace SodaMachine
             AddCansToMachine(10, "rootbeer");
         }
 
-        //public void PurchaseASoda(List<Coin> coins, string beverage)
-        //{
-        //    double moneyInserted = CountCoins(coins);
-        //    double costOfBeverage = CostOfBeverage(beverage);
-        //    bool checkInventory = CheckInventory(beverage);
-        //    double moneyInRegister = MoneyInRegister();
+        public void PurchaseASoda(List<Coin> coins, string beverage)
+        {
+            double moneyInserted = CountCoins(coins);
+            double costOfBeverage = CostOfBeverage(beverage);
+            bool checkInventory = CheckInventory(beverage);
+            double moneyInRegister = MoneyInRegister();
 
-        //    if (checkInventory == true)
-        //    {
-        //        // not enough money passed in, no trans, return money
-        //        if (moneyInserted < costOfBeverage)
-        //        {
+            if (checkInventory == true)
+            {
+                // not enough money passed in, no trans, return money
+                if (moneyInserted < costOfBeverage)
+                {
+                    DispenseChange(moneyInserted);
+                }
 
-        //        }
+                // exact change passes in, accept payment,
+                //dispense soda instance to be saved in backpack
+                else if (moneyInserted == costOfBeverage)
+                {
+                    //AddCoinsToRegister();
+                    RemoveCansFromInventory(1, beverage);
+                    AddCansToDrinkBin(1, beverage);
+                }
 
-        //        // exact change passes in, accept payment,
-        //        //dispense soda instance to be saved in backpack
-        //        else if (moneyInserted == costOfBeverage)
-        //        {
+                // too much money, accept payment, return change as list of coins from
+                // internal, limited register, dispense soda instance to be saved in backpack
+                else if (moneyInserted > costOfBeverage)
+                {
+                    double change = moneyInserted - costOfBeverage;
+                    if(change > moneyInRegister)
+                    {
+                        DispenseChange(change);
+                        //AddCoinsToRegister();
+                        RemoveCansFromInventory(1, beverage);
+                        AddCansToDrinkBin(1, beverage);
+                    }
+                    else
+                    {
+                        DispenseChange(moneyInserted);
+                    }
+                }
+            }
+            else // no inventory
+            {
+                DispenseChange(moneyInserted);
+            }
 
-        //        }
-
-        //        // too much money, accept payment, return change as list of coins from
-        //        // internal, limited register, dispense soda instance to be saved in backpack
-        //        else if (moneyInserted > costOfBeverage)
-        //        {
-
-        //        }
-
-        //        // too much money, not enough change in machine internal register,
-        //        // no trans, return money
-        //        else if (moneyInserted > costOfBeverage && )
-        //        {
-
-        //        }
-
-        //        // exact or too much money but no inventory soda, no trans, return money
-        //        else
-        //        {
-
-        //        }
-        //    }
-
-        //}
+        }
         public double CountCoins(List<Coin> coins)
         {
             double sum = 0;
@@ -262,43 +266,13 @@ namespace SodaMachine
             }
             return sum;
         }
-        //public double Refund()
-        //{
 
-        //}
-        //public double DispenseChange(double change)
-        //{
-        //    while (change > 0)
-        //    {
-        //        double quantityQuarters = change / .25;
-        //        double changeAfterQuarters = change-(quantityQuarters * .25);
-        //        RemoveCoinsFromRegister(quantityQuarters, "quarter");
-        //        AddCoinsToChangeBin(quantityQuarters, "quarter");
-        //        double quantityDimes = changeAfterQuarters / .1;
-        //    }
-        //    if(change >= 0.25)
-        //    {
-        //        var quantity = change / .25;
-        //    }
-        //    else if (change >= 0.1)
-        //    {
-
-        //    }
-        //    else if (change >= 0.05)
-        //    {
-
-        //    }
-        //    else
-        //    {
-
-        //    }
-        //}
         public double DispenseChange(double change)
         {
             double changeCalc = change;
             while (change > .01)
             {
-                if (change >= 0.25)
+                if (change >= 0.25 && RegisterCoinCheck("quarter"))
                 {
                     var quantity = Math.Round(changeCalc / .25);
                     for (int i = 0; i < quantity; i++)
@@ -309,7 +283,7 @@ namespace SodaMachine
                     change -= quantity * .25;
                     return DispenseChange(change);
                 }
-                else if (change >= 0.1)
+                else if (change >= 0.1 && RegisterCoinCheck("dime"))
                 {
                     var quantity = Math.Round(changeCalc / .1);
                     for (int i = 0; i < quantity; i++)
@@ -320,7 +294,7 @@ namespace SodaMachine
                     change -= quantity * .1;
                     return DispenseChange(change);
                 }
-                else if (change >= 0.05)
+                else if (change >= 0.05 && RegisterCoinCheck("nickel"))
                 {
                     var quantity = Math.Round(changeCalc / .05);
                     for (int i = 0; i < quantity; i++)
@@ -344,7 +318,17 @@ namespace SodaMachine
             return change;
         }
 
-
+        public bool RegisterCoinCheck(string nameOfCoin)
+        {
+            foreach(Coin coin in register)
+            {
+                if(coin.name == nameOfCoin)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
         public Can DispenseSoda(string beverage)
         {
             foreach (Can can in inventory)
