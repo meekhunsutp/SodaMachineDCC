@@ -1,33 +1,108 @@
-﻿using System;
-using System.CodeDom;
+﻿using System.Collections.Generic;
 
 namespace SodaMachine
 {
-    class Simulation
+    internal class Simulation
     {
         public SodaMachine sodaMachine;
         public Customer customer;
+        public List<Coin> coinsInserted;
 
         public Simulation()
         {
             sodaMachine = new SodaMachine();
             customer = new Customer();
+            coinsInserted = new List<Coin>();
         }
 
         public void RunSim()
         {
-            UserInterface.DisplayMessage("Thank you for choosing this machine");
+            UserInterface.DisplayMessage("\n\nThank you for choosing this machine\n");
             UserInterface.DisplayMessage("Which beverage will quench your thirst?");
             string beverage = UserInterface.SelectBeverage();
             double cost = sodaMachine.CostOfBeverage(beverage); // get cost of beverage
-            UserInterface.DisplayMessage($"The {beverage} costs: {cost}");//Display cost of selected beverage
+            UserInterface.DisplayMessage($"\nThe {beverage} costs: {cost}\n");//Display cost of selected beverage
             UserInterface.DisplayWallet(customer.wallet);
-            UserInterface.MethodOfPayment();
-
+            bool payWithCoins = UserInterface.MethodOfPayment();
+            if (payWithCoins == true)
+            {
+                do
+                {
+                    string nameOfCoin = UserInterface.SelectCoin();
+                    double quantity = UserInterface.QuantityCoins();
+                    for (int i = 0; i < quantity; i++)
+                    {
+                        InsertCoins(nameOfCoin);
+                    }
+                } while (UserInterface.AddMoreCoins());
+            }
+            else
+            {
+                //pay with card
+            }
+            sodaMachine.PurchaseASoda(coinsInserted, beverage);
+            customer.TakeBeverages(sodaMachine.drinkBin);
+            if (sodaMachine.CountCoins(sodaMachine.changeBin) > 0)
+            {
+                customer.TakeCoins(sodaMachine.changeBin);
+            }
+            UserInterface.DisplayMessage("Thank you, may your thirst be quenched");
         }
 
+        public void InsertCoins(string nameOfCoin)
+        {
+            for (int i = 0; i < customer.wallet.coins.Count; i++)
+            {
+                if (customer.wallet.coins[i].name == nameOfCoin)
+                {
+                    coinsInserted.Add(customer.wallet.coins[i]);
+                    customer.wallet.coins.RemoveAt(i);
+                    break;
+                }
+            }
+        }
 
+        //    for (int i = 0; i < quantity; i++)
+        //    {
+        //    }
 
+        //    foreach (Coin coin in customer.wallet.coins)
+        //    {
+        //    }
+        //}
+        //public void InsertCoin(string nameOfCoin)
+        //{
+        //    Quarter quarter = new Quarter();
+        //    Dime dime = new Dime();
+        //    Nickel nickel = new Nickel();
+        //    Penny penny = new Penny();
+        //    switch (nameOfCoin)
+        //    {
+        //        case "quarter":
+        //            customer.wallet.coins.Remove(Coin coin);
 
+        //            break;
+        //        case "dime":
+        //            break;
+        //        case "nickel":
+        //            break;
+        //        case "penny":
+        //            break;
+
+        //    }
+        //}
+        //public void InsertCoins(string nameOfCoin)
+        //{
+        //    foreach (Coin coin in customer.wallet.coins)
+        //    {
+        //        if (nameOfCoin == coin.name)
+        //        {
+        //            customer.wallet.coins.Remove(coin);
+        //            coinsInserted.Add(coin);
+        //        }
+        //        break;
+        //    }
+
+        //}
     }
 }

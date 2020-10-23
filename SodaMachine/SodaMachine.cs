@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace SodaMachine
 {
@@ -96,7 +95,7 @@ namespace SodaMachine
                 else if (moneyInserted == costOfBeverage)
                 {
                     AddCoinsInsertedToRegister(coins);
-                    DispenseCan(1, beverage);
+                    DispenseCan(beverage);
                 }
 
                 // too much money, accept payment, return change as list of coins from
@@ -109,7 +108,7 @@ namespace SodaMachine
                     {
                         AddCoinsInsertedToRegister(coins);
                         DispenseChange(change);
-                        DispenseCan(1, beverage);
+                        DispenseCan(beverage);
                     }
                     else// not enough change
                     {
@@ -175,17 +174,29 @@ namespace SodaMachine
             }
             return false;
         }
-        public void DispenseCan(double quantity, string beverage)
+        //public void DispenseCan(string beverage)
+        //{
+        //    foreach (Can can in inventory)
+        //    {
+
+
+        //        if (beverage == can.name)
+        //        {
+        //            inventory.Remove(can);
+        //            drinkBin.Add(can);
+        //        }
+        //        break;
+        //    }
+        //}
+        public void DispenseCan(string beverage)
         {
-            foreach (Can can in inventory)
+            for (int i = 0; i < inventory.Count; i++)
             {
-                for (int i = 0; i < quantity; i++)
+                if (inventory[i].name == beverage)
                 {
-                    if (beverage == can.name)
-                    {
-                        inventory.Remove(can);
-                        drinkBin.Add(can);
-                    }
+                    drinkBin.Add(inventory[i]);
+                    inventory.RemoveAt(i);
+                    break;
                 }
             }
         }
@@ -206,19 +217,26 @@ namespace SodaMachine
             double changeCalc = change;
             while (change > .01)
             {
+                //Quarter quarter = new Quarter();
+                //Dime dime = new Dime();
+                //Nickel nickel = new Nickel();
+                //Penny penny = new Penny();
+                //if (change >= 0.25 && CheckRegisterCoinInventory(quarter.name))
                 if (change >= 0.25 && CheckRegisterCoinInventory("quarter"))
                 {
-                    var quantity = Math.Round(changeCalc / .25);
+                    var quantity = Math.Floor(changeCalc / .25);
                     for (int i = 0; i < quantity; i++)
                     {
                         CoinsFromRegisterToChangeBin("quarter");
+                        //CoinsFromRegisterToChangeBin(quarter.name);
                     }
                     change -= quantity * .25;
                     return DispenseChange(change);
                 }
+                //else if (change >= 0.1 && CheckRegisterCoinInventory(dime.name))
                 else if (change >= 0.1 && CheckRegisterCoinInventory("dime"))
                 {
-                    var quantity = Math.Round(changeCalc / .1);
+                    var quantity = Math.Floor(changeCalc / .1);
                     for (int i = 0; i < quantity; i++)
                     {
                         CoinsFromRegisterToChangeBin("dime");
@@ -227,38 +245,54 @@ namespace SodaMachine
                     return DispenseChange(change);
                 }
                 else if (change >= 0.05 && CheckRegisterCoinInventory("nickel"))
+                //else if (change >= 0.05 && CheckRegisterCoinInventory(nickel.name))
                 {
-                    var quantity = Math.Round(changeCalc / .05);
+                    var quantity = Math.Floor(changeCalc / .05);
                     for (int i = 0; i < quantity; i++)
                     {
                         CoinsFromRegisterToChangeBin("nickel");
+                        //CoinsFromRegisterToChangeBin(nickel.name);
                     }
                     change -= quantity * .05;
                     return DispenseChange(change);
                 }
                 else
                 {
-                    var quantity = Math.Round(changeCalc / .01);
+                    var quantity = Math.Floor(changeCalc / .01);
                     for (int i = 0; i < quantity; i++)
                     {
                         CoinsFromRegisterToChangeBin("penny");
+                        //CoinsFromRegisterToChangeBin(penny.name);
                     }
                 }
             }
             return change;
         }
 
-        public Coin CoinsFromRegisterToChangeBin(string nameOfCoin)
+        //public void CoinsFromRegisterToChangeBin(string nameOfCoin)
+        //{
+        //    foreach (Coin coin in register)
+        //    {
+        //        if (nameOfCoin == coin.name)
+        //        {
+        //            register.Remove(coin);
+        //            changeBin.Add(coin);
+        //        }
+        //        break;
+        //    }
+        //}
+        public void CoinsFromRegisterToChangeBin(string nameOfCoin)
         {
-            foreach (Coin coin in register)
+            for (int i = 0; i < register.Count; i++)
             {
-                if (nameOfCoin == coin.name)
+                if( register[i].name == nameOfCoin)
                 {
-                    register.Remove(coin);
-                    changeBin.Add(coin);
+                    changeBin.Add(register[i]);
+                    register.RemoveAt(i);
+                    break;
                 }
+
             }
-            return null;
         }
         public void CoinReturn(List<Coin> coins)
         {

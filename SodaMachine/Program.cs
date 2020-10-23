@@ -1,13 +1,10 @@
-﻿using System.Collections.Generic;
-
-namespace SodaMachine
+﻿namespace SodaMachine
 {
     class Program
     {
         static void Main(string[] args)
         {
             //SodaMachine sodaMachine = new SodaMachine();
-            //sodaMachine.PopulateSodaMachine();
             //sodaMachine.DispenseChange(1.32);
 
             //List<Coin> coins = new List<Coin>();
@@ -21,7 +18,9 @@ namespace SodaMachine
 
             //register.AddRange(coins);
 
-            UserInterface.SelectCoin();
+            //UserInterface.SelectCoin();
+            Simulation simulation = new Simulation();
+            simulation.RunSim();
         }
     }
 }
