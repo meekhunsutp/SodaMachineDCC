@@ -2,12 +2,21 @@
 {
     class Card
     {
-        private double availableFunds;
-        public double AvailableFunds;
-
-
-
-
-
+        protected double availableFunds;
+        public double AvailableFunds
+        {
+            get
+            {
+                return availableFunds;
+            }
+            set
+            {
+                availableFunds = value;
+            }
+        }
+        public Card()
+        {
+            availableFunds = 5;
+        }
     }
 }

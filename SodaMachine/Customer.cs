@@ -5,7 +5,7 @@ namespace SodaMachine
     class Customer
     {
         public Wallet wallet;
-        private Backpack backpack;
+        public Backpack backpack;
         public Customer()
         {
             wallet = new Wallet();

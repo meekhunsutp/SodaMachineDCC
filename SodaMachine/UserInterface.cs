@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace SodaMachine
 {
@@ -40,7 +39,7 @@ namespace SodaMachine
                 case "1":
                     return true;
                 case "2":
-                    return true;
+                    return false;
                 default:
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("\nPlease input valid selection number\n");
@@ -101,10 +100,6 @@ namespace SodaMachine
                     return AddMoreCoins();
             }
         }
-        public static void CardOption()
-        {
-
-        }
         public static void DisplayWallet(Wallet wallet)
         {
             int quarters = 0;
@@ -133,56 +128,56 @@ namespace SodaMachine
             Console.WriteLine($"You have in your wallet: {quarters} quarters, {dimes} dimes, {nickels} nickels, {pennies} pennies\n");
         }
     }
-        //public static void CoinOption()
-        //{
-        //    List<string> coinOptions = new List<string>() { "Quarters", "Dimes", "Nickels", "Pennies" };
-        //    Console.WriteLine("Please choose what coins to insert");
-        //    for (int i = 0; i < beverages.Count; i++)
-        //    {
-        //        Console.WriteLine($"{i + 1}) {beverages[i].name}");
-        //    }
-        //    string userInput = Console.ReadLine();
-        //    if (!int.TryParse(userInput, out choice))
-        //    {
-        //        Console.ForegroundColor = ConsoleColor.Red;
-        //        Console.WriteLine("INVALID input, please enter a number");
-        //        return SelectBeverage();
-        //    }
-        //    else if (choice > 3 || choice < 0)
-        //    {
-        //        Console.ForegroundColor = ConsoleColor.Red;
-        //        Console.WriteLine("INVALID option, please select again");
-        //        return SelectBeverage();
-        //    }
-        //    var beverage = beverages[choice].name;
-        //    return beverage;
-        //}
-        //public static string SelectBeverage()
-        //{
-        //    List<Can> beverages = new List<Can>() { new Cola(), new Orange(), new RootBeer() };
-        //    Console.WriteLine("Please input selection number");
-        //    for (int i = 0; i < beverages.Count; i++)
-        //    {
-        //        Console.WriteLine($"{i}) {beverages[i].name}");
-        //    }
-        //    string userInput = Console.ReadLine();
-        //    if (!int.TryParse(userInput, out int choice))
-        //    {
-        //        Console.Clear();
-        //        Console.ForegroundColor = ConsoleColor.Red;
-        //        Console.WriteLine("INVALID input, please enter a number");
-        //        Console.ForegroundColor = ConsoleColor.White;
-        //        return SelectBeverage();
-        //    }
-        //    else if (choice > 2 || choice < 0)
-        //    {
-        //        Console.Clear();
-        //        Console.ForegroundColor = ConsoleColor.Red;
-        //        Console.WriteLine("INVALID option, please select again");
-        //        Console.ForegroundColor = ConsoleColor.White;
-        //        return SelectBeverage();
-        //    }
-        //    var beverage = beverages[choice].name;
-        //    return beverage;
-        //}
+    //public static void CoinOption()
+    //{
+    //    List<string> coinOptions = new List<string>() { "Quarters", "Dimes", "Nickels", "Pennies" };
+    //    Console.WriteLine("Please choose what coins to insert");
+    //    for (int i = 0; i < beverages.Count; i++)
+    //    {
+    //        Console.WriteLine($"{i + 1}) {beverages[i].name}");
+    //    }
+    //    string userInput = Console.ReadLine();
+    //    if (!int.TryParse(userInput, out choice))
+    //    {
+    //        Console.ForegroundColor = ConsoleColor.Red;
+    //        Console.WriteLine("INVALID input, please enter a number");
+    //        return SelectBeverage();
+    //    }
+    //    else if (choice > 3 || choice < 0)
+    //    {
+    //        Console.ForegroundColor = ConsoleColor.Red;
+    //        Console.WriteLine("INVALID option, please select again");
+    //        return SelectBeverage();
+    //    }
+    //    var beverage = beverages[choice].name;
+    //    return beverage;
+    //}
+    //public static string SelectBeverage()
+    //{
+    //    List<Can> beverages = new List<Can>() { new Cola(), new Orange(), new RootBeer() };
+    //    Console.WriteLine("Please input selection number");
+    //    for (int i = 0; i < beverages.Count; i++)
+    //    {
+    //        Console.WriteLine($"{i}) {beverages[i].name}");
+    //    }
+    //    string userInput = Console.ReadLine();
+    //    if (!int.TryParse(userInput, out int choice))
+    //    {
+    //        Console.Clear();
+    //        Console.ForegroundColor = ConsoleColor.Red;
+    //        Console.WriteLine("INVALID input, please enter a number");
+    //        Console.ForegroundColor = ConsoleColor.White;
+    //        return SelectBeverage();
+    //    }
+    //    else if (choice > 2 || choice < 0)
+    //    {
+    //        Console.Clear();
+    //        Console.ForegroundColor = ConsoleColor.Red;
+    //        Console.WriteLine("INVALID option, please select again");
+    //        Console.ForegroundColor = ConsoleColor.White;
+    //        return SelectBeverage();
+    //    }
+    //    var beverage = beverages[choice].name;
+    //    return beverage;
+    //}
 }

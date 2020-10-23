@@ -35,12 +35,13 @@ namespace SodaMachine
                         InsertCoins(nameOfCoin);
                     }
                 } while (UserInterface.AddMoreCoins());
+                sodaMachine.PurchaseASoda(coinsInserted, beverage);
             }
             else
             {
-                //pay with card
+                sodaMachine.PurchaseASoda(customer.wallet.card.AvailableFunds, beverage);
+                customer.wallet.card.AvailableFunds -= cost;
             }
-            sodaMachine.PurchaseASoda(coinsInserted, beverage);
             customer.TakeBeverages(sodaMachine.drinkBin);
             if (sodaMachine.CountCoins(sodaMachine.changeBin) > 0)
             {
@@ -48,7 +49,6 @@ namespace SodaMachine
             }
             UserInterface.DisplayMessage("Thank you, may your thirst be quenched");
         }
-
         private void InsertCoins(string nameOfCoin)
         {
             for (int i = 0; i < customer.wallet.coins.Count; i++)
