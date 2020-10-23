@@ -4,9 +4,9 @@ namespace SodaMachine
 {
     internal class Simulation
     {
-        public SodaMachine sodaMachine;
-        public Customer customer;
-        public List<Coin> coinsInserted;
+        private SodaMachine sodaMachine;
+        private Customer customer;
+        private List<Coin> coinsInserted;
 
         public Simulation()
         {
@@ -20,8 +20,8 @@ namespace SodaMachine
             UserInterface.DisplayMessage("\n\nThank you for choosing this machine\n");
             UserInterface.DisplayMessage("Which beverage will quench your thirst?");
             string beverage = UserInterface.SelectBeverage();
-            double cost = sodaMachine.CostOfBeverage(beverage); // get cost of beverage
-            UserInterface.DisplayMessage($"\nThe {beverage} costs: {cost}\n");//Display cost of selected beverage
+            double cost = sodaMachine.CostOfBeverage(beverage);
+            UserInterface.DisplayMessage($"\nThe {beverage} costs: {cost}\n");
             UserInterface.DisplayWallet(customer.wallet);
             bool payWithCoins = UserInterface.MethodOfPayment();
             if (payWithCoins == true)
@@ -49,7 +49,7 @@ namespace SodaMachine
             UserInterface.DisplayMessage("Thank you, may your thirst be quenched");
         }
 
-        public void InsertCoins(string nameOfCoin)
+        private void InsertCoins(string nameOfCoin)
         {
             for (int i = 0; i < customer.wallet.coins.Count; i++)
             {

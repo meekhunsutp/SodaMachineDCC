@@ -9,9 +9,5 @@ namespace SodaMachine
         {
             cans = new List<Can>();
         }
-
-
-
-
     }
 }

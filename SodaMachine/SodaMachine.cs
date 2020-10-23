@@ -5,8 +5,8 @@ namespace SodaMachine
 {
     class SodaMachine
     {
-        public List<Coin> register;
-        public List<Can> inventory;
+        private List<Coin> register;
+        private List<Can> inventory;
         public List<Coin> changeBin;
         public List<Can> drinkBin;
         public SodaMachine()
@@ -17,7 +17,7 @@ namespace SodaMachine
             drinkBin = new List<Can>();
             PopulateSodaMachine();
         }
-        public void CreateCoinsInRegister(double quantity, string nameOfCoin)
+        private void CreateCoinsInRegister(double quantity, string nameOfCoin)
         {
             Coin coin;
             for (int i = 0; i < quantity; i++)
@@ -44,7 +44,7 @@ namespace SodaMachine
                 }
             }
         }
-        public void CreateCansInMachine(double quantity, string nameOfCan)
+        private void CreateCansInMachine(double quantity, string nameOfCan)
         {
             Can can;
             for (int i = 0; i < quantity; i++)
@@ -66,7 +66,7 @@ namespace SodaMachine
                 }
             }
         }
-        public void PopulateSodaMachine()
+        private void PopulateSodaMachine()
         {
             CreateCoinsInRegister(20, "quarter");//20
             CreateCoinsInRegister(10, "dime");//10
@@ -150,11 +150,11 @@ namespace SodaMachine
                 return can.Cost;
             }
         }
-        public void AddCoinsInsertedToRegister(List<Coin> coins)
+        private void AddCoinsInsertedToRegister(List<Coin> coins)
         {
             register.AddRange(coins);
         }
-        public double MoneyInRegister()
+        private double MoneyInRegister()
         {
             double sum = 0;
             foreach (Coin coin in register)
@@ -163,7 +163,7 @@ namespace SodaMachine
             }
             return sum;
         }
-        public bool CheckCanInventory(string beverage)
+        private bool CheckCanInventory(string beverage)
         {
             foreach (Can can in inventory)
             {
@@ -188,7 +188,7 @@ namespace SodaMachine
         //        break;
         //    }
         //}
-        public void DispenseCan(string beverage)
+        private void DispenseCan(string beverage)
         {
             for (int i = 0; i < inventory.Count; i++)
             {
@@ -201,7 +201,7 @@ namespace SodaMachine
             }
         }
 
-        public bool CheckRegisterCoinInventory(string nameOfCoin)
+        private bool CheckRegisterCoinInventory(string nameOfCoin)
         {
             foreach (Coin coin in register)
             {
@@ -212,7 +212,7 @@ namespace SodaMachine
             }
             return false;
         }
-        public double DispenseChange(double change)
+        private double DispenseChange(double change)
         {
             double changeCalc = change;
             while (change > .01)
@@ -281,7 +281,7 @@ namespace SodaMachine
         //        break;
         //    }
         //}
-        public void CoinsFromRegisterToChangeBin(string nameOfCoin)
+        private void CoinsFromRegisterToChangeBin(string nameOfCoin)
         {
             for (int i = 0; i < register.Count; i++)
             {
@@ -294,7 +294,7 @@ namespace SodaMachine
 
             }
         }
-        public void CoinReturn(List<Coin> coins)
+        private void CoinReturn(List<Coin> coins)
         {
             changeBin.AddRange(coins);
         }

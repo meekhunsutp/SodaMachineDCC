@@ -13,8 +13,7 @@ namespace SodaMachine
             card = new Card();
             PopulateWallet();
         }
-
-        public void CreateCoinsInWallet(double quantity, string nameOfCoin)
+        private void CreateCoinsInWallet(double quantity, string nameOfCoin)
         {
             Coin coin;
             for (int i = 0; i < quantity; i++)
@@ -41,14 +40,12 @@ namespace SodaMachine
                 }
             }
         }
-        public void PopulateWallet()
+        private void PopulateWallet()
         {
             CreateCoinsInWallet(10, "quarter");
             CreateCoinsInWallet(10, "dime");
             CreateCoinsInWallet(20, "nickel");
             CreateCoinsInWallet(50, "penny");
         }
-
-
     }
 }
